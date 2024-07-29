@@ -42,11 +42,10 @@ pipeline {
                 """
             }
         }
-        stage('Deploy') {
+        stage('Build') {
             steps {
                 sh """
-                    echo "Running the shell script"
-                    #sleep 10
+                    ls -la
                 """
             }
         }
