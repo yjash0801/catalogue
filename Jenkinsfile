@@ -11,6 +11,7 @@ pipeline {
         // Timeout counter starts AFTER agent is allocated
         timeout(time: 1, unit: 'HOURS')
         disableConcurrentBuilds()
+        ansiColor('xterm')
     }
     // parameters {
     //     string(name: 'PERSON', defaultValue: 'Mr Jenkins', description: 'Who should I say hello to?')
