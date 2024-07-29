@@ -6,7 +6,7 @@ pipeline {
     }
     environment {
         packageVersion = ''
-        nexusURL = 'http://18.212.151.40:8081/repository/catalogue/'
+        nexusURL = '172.31.38.156:8081'
     }
     options {
         // Timeout counter starts AFTER agent is allocated
