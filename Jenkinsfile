@@ -25,7 +25,7 @@ pipeline {
     // }
     // build
     stages {
-        stage('Clone') {
+        stage('Get the version') {
             steps {
                 script{
                     def packageJSON = readJSON file: 'package.json'
@@ -34,9 +34,11 @@ pipeline {
                 }
             }
         }
-        stage('Test') {
+       stage('Install the dependencies') {
             steps {
-                echo 'Testing..'
+                sh """
+                npm install
+                """
             }
         }
         stage('Deploy') {
