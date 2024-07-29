@@ -6,6 +6,7 @@ pipeline {
     }
     environment {
         packageVersion = ''
+        nexusURL = '172.31.38.156'
     }
     options {
         // Timeout counter starts AFTER agent is allocated
@@ -50,6 +51,25 @@ pipeline {
                     zip -q -r catalogue.zip ./* -x ".git" -x "*.zip"
                     ls -ltr
                 '''
+            }
+        }
+        stage('Publish Artifact') {
+            steps {
+                nexusArtifactUploader(
+                nexusVersion: 'nexus3',
+                protocol: 'http',
+                nexusUrl: "${nexusURL}",
+                groupId: 'com.mechanoidstore',
+                version: "${packageVersion}",
+                repository: 'catalogue',
+                credentialsId: 'nexus-auth',
+                artifacts: [
+                    [artifactId: 'catalogue',
+                    classifier: '',
+                    file: 'catalogue.zip',
+                    type: 'zip']
+                    ]
+                )
             }
         }
     }
