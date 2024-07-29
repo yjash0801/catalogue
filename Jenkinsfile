@@ -4,7 +4,7 @@ pipeline {
             label 'AGENT-1'
         }
     }
-    environment { 
+    environment {
         packageVersion = ''
     }
     options {
@@ -35,34 +35,34 @@ pipeline {
                 }
             }
         }
-       stage('Install the dependencies') {
+        stage('Install the dependencies') {
             steps {
-                sh """
+                sh '''
                 npm install
-                """
+                '''
             }
         }
         stage('Build') {
             steps {
-                sh """
+                sh '''
                     ls -la
                     #rm -f catalogue.zip
                     zip -q -r catalogue.zip ./* -x ".git" -x "*.zip"
                     ls -ltr
-                """
+                '''
             }
         }
     }
     // post build
-    post { 
-        always { 
+    post {
+        always {
             echo 'I will always say Hello again!'
             deleteDir()
         }
-        failure { 
+        failure {
             echo 'This runs when pipeline is failed, used to send some alerts'
         }
-        success { 
+        success {
             echo 'This runs when pipeline is success'
         }
     }
