@@ -9,26 +9,13 @@ pipeline {
         nexusURL = '172.31.38.156:8081'
     }
     options {
-        // Timeout counter starts AFTER agent is allocated
         timeout(time: 1, unit: 'HOURS')
         disableConcurrentBuilds()
     }
-    // parameters {
-    //     string(name: 'PERSON', defaultValue: 'Mr Jenkins', description: 'Who should I say hello to?')
-
-    //     text(name: 'BIOGRAPHY', defaultValue: '', description: 'Enter some information about the person')
-
-    //     booleanParam(name: 'TOGGLE', defaultValue: true, description: 'Toggle this value')
-
-    //     choice(name: 'CHOICE', choices: ['One', 'Two', 'Three'], description: 'Pick something')
-
-    //     password(name: 'PASSWORD', defaultValue: 'SECRET', description: 'Enter a password')
-    // }
-    // build
     stages {
         stage('Get the version') {
             steps {
-                script{
+                script {
                     def packageJSON = readJSON file: 'package.json'
                     packageVersion = packageJSON.version
                     echo "application version: $packageVersion"
@@ -46,7 +33,6 @@ pipeline {
             steps {
                 sh '''
                     ls -la
-                    #rm -f catalogue.zip
                     zip -q -r catalogue.zip ./* -x ".git" -x "*.zip"
                     ls -ltr
                 '''
@@ -55,18 +41,18 @@ pipeline {
         stage('Publish Artifact') {
             steps {
                 nexusArtifactUploader(
-                nexusVersion: 'nexus3',
-                protocol: 'http',
-                nexusUrl: "${nexusURL}",
-                groupId: 'com.mechanoidstore',
-                version: "${packageVersion}",
-                repository: 'catalogue',
-                credentialsId: 'nexus-auth',
-                artifacts: [
-                    [artifactId: 'catalogue',
-                    classifier: '',
-                    file: 'catalogue.zip',
-                    type: 'zip']
+                    nexusVersion: 'nexus3',
+                    protocol: 'http',
+                    nexusUrl: "${nexusURL}",
+                    groupId: 'com.mechanoidstore',
+                    version: "${packageVersion}",
+                    repository: 'catalogue',
+                    credentialsId: 'nexus-auth',
+                    artifacts: [
+                        [artifactId: 'catalogue',
+                        classifier: '',
+                        file: 'catalogue.zip',
+                        type: 'zip']
                     ]
                 )
             }
@@ -74,16 +60,15 @@ pipeline {
         stage('Deploy') {
             steps {
                 script {
-                        def params = [
-                            string(name: 'version', value: "$packageVersion"),
-                            string(name: 'environment', value: "dev")
-                        ]
-                        build job: "catalogue-deploy", wait: true, parameters: params
-                    }
+                    def params = [
+                        string(name: 'version', value: packageVersion),
+                        string(name: 'environment', value: "dev")
+                    ]
+                    build job: "catalogue-deploy", wait: true, parameters: params
+                }
             }
         }
     }
-    // post build
     post {
         always {
             echo 'I will always say Hello again!'
