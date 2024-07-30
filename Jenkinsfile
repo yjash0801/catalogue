@@ -24,18 +24,18 @@ pipeline {
         }
         stage('Install the dependencies') {
             steps {
-                sh '''
+                sh """
                 npm install
-                '''
+                """
             }
         }
         stage('Build') {
             steps {
-                sh '''
+                sh """
                     ls -la
                     zip -q -r catalogue.zip ./* -x ".git" -x "*.zip"
                     ls -ltr
-                '''
+                """
             }
         }
         stage('Publish Artifact') {
@@ -61,7 +61,7 @@ pipeline {
             steps {
                 script {
                     def params = [
-                        string(name: 'version', value: packageVersion),
+                        string(name: 'version', value: "$packageVersion"),
                         string(name: 'environment', value: "dev")
                     ]
                     build job: "catalogue-deploy", wait: true, parameters: params
