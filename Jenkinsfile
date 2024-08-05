@@ -7,5 +7,10 @@ def configMap = [
     application: "nodejsVM",
     component: "catalogue"
 ]
-echo "Hello world"
-echo "Environment: $env"
+
+if( ! env.BRANCH_NAME.equalsIgnoreCase('master')){
+    pipelineDecision.decidePipeline(configMap)
+}
+else{
+    echo "This is Production, deal with CR process"
+}
