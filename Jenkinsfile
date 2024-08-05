@@ -8,4 +8,4 @@ def configMap = [
     component: "catalogue"
 ]
 echo "Hello world"
-env
+echo "Environment: $env"
