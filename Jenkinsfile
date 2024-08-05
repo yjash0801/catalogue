@@ -8,9 +8,4 @@ def configMap = [
     component: "catalogue"
 ]
 
-if(){
-
-}
-else{
-
-}
+env
